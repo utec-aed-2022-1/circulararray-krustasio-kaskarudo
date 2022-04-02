@@ -154,8 +154,27 @@ public:
     }
     
     
-    void sort();
-    bool is_sorted();
+    void sort(){
+      for(int i = front; i != back - 1; i = next(i)){
+        int min_idx = i;
+        for (int j = next(i); j != next(back); j=next(j))
+            if (array[j] < array[min_idx])
+                min_idx = j;
+        T temp= array[min_idx];
+        array[min_idx]=array[i];
+        array[i]= temp;
+      }
+
+    }
+    bool is_sorted(){
+      
+    for(int i=0; i<size()-1; i++){
+        if(array[i]>array[i+1]) return false;
+    }
+    return true;
+    }
+    
+
     void reverse(){
       for (int low = 0, high = size()-1; low < high; low++, high--){
         swap(this->array[low], this->array[high]);
