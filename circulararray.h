@@ -8,164 +8,166 @@ private:
     T *array;
     int capacity;
     int back, front;
-    
+
+
+
 public:
     CircularArray();
     CircularArray(int _capacity);
+
+    void display(){
+      if(is_empty()){
+        return;
+        } else{
+      for(int i = front; i<=back;i++){
+        cout<<array[i]<<endl;
+        }
+      }
+    }
+
     virtual ~CircularArray();
-    void push_front(T data);
-    void push_back(T data);
-    void insert(T data, int pos);
-    T pop_front();
-    T pop_back();
-    bool is_full();
-    bool is_empty();
-    int size();
-    void clear();
-    T &operator[](int);
+
+    void push_front(T data){
+     T *new_array = new T [capacity+1];
+        for(int i = front; i <= back; i++)
+        {
+            new_array[i+1] = array[i];
+        }
+        new_array[front] = data;
+        this->back++;
+        this->capacity++;
+      array = new_array;
+      }
+
+    void resize(){
+      int *temp = new T[this->capacity * 2];
+      for (int i = 0; i < this->capacity; i++){
+        temp[i] = this->array[(i+1) % this->capacity];
+        }
+      delete[] this->array;
+      this->array = temp;
+      this->back = this->capacity - 1;
+      this->front = 0;
+      this->capacity = this->capacity * 2;
+    }
+
+    void push_back(T data){
+      if (is_full()){
+        resize();
+      }
+      if (is_empty() == false){
+        this->back = next(this->back);
+      } else {
+        this->front = this->back = 0;
+        }
+      this->array[this->back] = data;
+    }
+
+    void insert(T data, int pos){
+      if (is_full()){
+        resize();
+    }
+      
+    if (is_empty() == false){
+      int i = next(this->back);
+      this->back = next(this->back);
+      while (i != ((pos % size()) + this->front)){
+        this->array[i] = this->array[prev(i)];
+        cout << endl << this->array[i] <<endl;
+        i = prev(i);
+      }
+      this->array[((pos % size()) + this->front)] = data;
+      }
+    }
+
+    T pop_front(){
+      if (is_empty() == false){
+        if (this->front == this->back){
+          T frnt = this->array[this->front];
+          this->front = this->back = -1;
+          return frnt;
+      } else {
+          T frnt = this->array[this->front];
+          this->front = next(this->front);
+          return frnt;
+      }
+      } else {
+          return;
+        }
+    }
+    
+
+    T pop_back(){
+      if (is_empty() == false){
+        if (this->front == this->back){
+          T bck = this->array[this->back];
+          this->front = this->back = -1;
+          return bck;
+        } else{
+            T bck = this->array[this->back];
+            this->back = prev(this->back);
+            return bck;
+          }
+            } else {
+                return;
+      }
+    }
+    
+
+    bool is_full(){
+      if (back == capacity){
+      return true;
+      }
+      else{
+        return false;
+      }
+    }
+
+    bool is_empty(){
+      return ((this->back == -1) && (this->front == -1));
+    }
+
+    int size(){
+      if (is_empty() == false){
+        int sz = 0;
+        if (this->front > this->back){
+            sz = this->capacity - this->front + this->back+ 1;
+        } else{
+          sz = this->back - this->front + 1;
+          } return sz;
+      } else {
+        return 0;
+      }
+    }
+    
+  void clear(){
+    delete []array;
+    this->array = new T[0];
+    this->capacity = 0;
+    this->rear = 0;
+    this->front = 0;
+    array  = new T[0];
+    }
+
+    T& operator[](int index){
+      return array[(this->front + index) % this->capacity];
+    }
+    
+    
     void sort();
     bool is_sorted();
-    void reverse();
+    void reverse(){
+      for (int low = 0, high = size()-1; low < high; low++, high--){
+        swap(this->array[low], this->array[high]);
+        }
+    }
+
     string to_string(string sep=" ");
 
 private:
-    int next(int);
+    int next(int index);
     int prev(int);
 };
-
-// IMPLEMENTACIONES
-
-
-template <class T>
-void CircularArray<T>::push_front(T data)
-{
-  if(is_empty())
-  {
-    array[front]=data;
-  }
-
-  else if(is_full())
-  {
-    T *new_array = new T [capacity+10];
-    for(int i = front; i < rear; i++)
-    {
-      new_array[i+1] = array[i];
-    }
-    new_array[front] = data;
-    array = new_array;
-  }
-  else
-  {
-    for(int i=rear; i > front; i--)
-    {
-      array[i+1] = array[i];
-    }
-    array[front]=data;
-  }
-}
-
-template <class T>
-void CircularArray<T>::push_back(T data)
-{
-  if(is_empty())
-  {
-    array[back] = data;
-  }
-  else if(is_full())
-  {
-    T *new_array = new T[capacity+10];
-    for(int i = front; i < rear; i++)
-    {
-      array[i] = new_array[i];
-    }
-    new_array[back+1] = data;
-    array = new_array;
-  }
-  else{
-    array[back+1] = data;
-  }
-}
-
-template <class T>
-void CircularArray<T>::pop_front(T data)
-{
-  if(is_empty())
-  {
-    cout << "error"; << endl;
-  }
-  else if
-  {
-     T *new_array = new T [capacity];
-     for(int i = front; i < rear; i++)
-     {
-       array[i+1] = new_array[i];
-     }
-     array = new_array;
-  }
-
-}
-
-template <class T>
-void CircularArray<T>::pop_back(T data)
-{
-  if(is_empty())
-  {
-    array[back] = data;
-  }
-  else if(is_full())
-  {
-    T *new_array = new T [capacity+10];
-    new_array[back+1] = data;
-    array = new_array;
-  }
-  else
-  {
-    array[back+1] = data;
-  }
-}
-
-
-template <class T>
-bool CircularArray<T>::is_full()
-{
-  return (back+1) % capacity == front;
-}
-
-template <class T>
-bool CircularArray<T>::is_empty()
-{
-  if(front == rear)
-  {
-    return true;
-  } 
-  else
-  {
-    return false;
-  }
-
-}
-
-
-// SIN TERMINAR 
-template <class T>
-int CircularArray<T>::size()
-{
-  int count = 0;
-  if(front == rear)
-  {
-    return 0;
-  }
-  else
-  {
-    for(int i = front; i < rear; i++){
-      count++;
-    }
-    return count;
-  }
-}
-
-
-// DEFAULTS
 
 template <class T>
 CircularArray<T>::CircularArray()
@@ -203,9 +205,10 @@ template <class T>
 string CircularArray<T>::to_string(string sep)
 {
     string result = ""; 
-    for (int i = 0; i < size(); i++)
-    {
-        result += std::to_string((*this)[i]) + sep;
+    for (int i = front-1; i < back; i++){
+      cout<<i<< endl;
+      result += std::to_string((*this)[i]) + sep;
+
     }
     return result;    
 }
