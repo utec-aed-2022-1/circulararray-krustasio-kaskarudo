@@ -7,11 +7,11 @@ class CircularArray
 private:
     T *array;
     int capacity;
-    int back, front;
 
 
 
 public:
+    int back, front;
     CircularArray();
     CircularArray(int _capacity);
 
@@ -35,7 +35,7 @@ public:
         }
         new_array[front] = data;
         this->back++;
-        this->capacity++;
+        //this->capacity++;
       array = new_array;
       }
 
@@ -205,10 +205,8 @@ template <class T>
 string CircularArray<T>::to_string(string sep)
 {
     string result = ""; 
-    for (int i = front-1; i < back; i++){
-      cout<<i<< endl;
-      result += std::to_string((*this)[i]) + sep;
-
+    for (int i = front; i <= back; i++){
+      result += std::to_string(array[i]) + sep;
     }
     return result;    
 }
